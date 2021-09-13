@@ -1,0 +1,4 @@
+suites:
+    main:
+        namespace: Comvation\SyliusPayrexxCheckoutPlugin
+        psr4_prefix: Comvation\SyliusPayrexxCheckoutPlugin
