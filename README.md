@@ -20,42 +20,40 @@ To be able to setup a plugin's database, remember to configure you database cred
 
 ## Local Setup for Development and Testing Payrexx integration
 
-- Set up localtunnel according to
-
-  https://localtunnel.me/
+Set up localtunnel according to: https://localtunnel.me/
 
 Note:  Currently redirects to https://theboroer.github.io/localtunnel-www/
 
-- Run localtunnel locally
+Run localtunnel locally
 
-  lt -p 80 -s mflyshop
+    lt -p 80 -s mflyshop
 
-- Use an alternative server, if the default loca.lt is down
+Use an alternative server, if the default loca.lt is down
 
-  lt -h "http://serverless.social" -p 80 -s mflyshop
+    lt -h "http://serverless.social" -p 80 -s mflyshop
 
-- Copy the obtained domain name, e.g.
+Copy the obtained domain name, e.g.
 
-  your url is: https://mflyshop.loca.lt
-  your url is: https://mflyshop.serverless.social
+    your url is: https://mflyshop.loca.lt
+    your url is: https://mflyshop.serverless.social
 
-- Configure the Payrexx account's webhook URL, e.g.
+Configure the Payrexx account's webhook URL, e.g.
 
-  https://mflyshop.loca.lt/payment/payrexx/webhook
-  https://mflyshop.serverless.social/payment/payrexx/webhook
+     https://mflyshop.loca.lt/payment/payrexx/webhook
+     https://mflyshop.serverless.social/payment/payrexx/webhook
 
-- Make sure the Payrexx account is set up for test mode!
+Make sure the Payrexx account is set up for test mode!
 
-- If not present already, create a "Payrexx Payment" method
+If not present already, create a "Payrexx Payment" method
 
-  http://localhost/admin/payment-methods/
+    http://localhost/admin/payment-methods/
 
-- Configure the proper instance, key, and API domain (e.g., payrexx.com).
+Configure the proper instance, key, and API domain (e.g., payrexx.com).
 
-- Open the shop in your browser using the domain name, e.g.
+Open the shop in your browser using the domain name, e.g.
 
-  https://mflyshop.loca.lt/
-  https://mflyshop.serverless.social/
+     https://mflyshop.loca.lt/
+     https://mflyshop.serverless.social/
 
 Place your order, use any of the Payrexx test credit card numbers; see
 
