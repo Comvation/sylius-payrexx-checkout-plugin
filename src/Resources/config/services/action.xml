@@ -11,10 +11,6 @@
             <argument type="service" id="logger"/>
             <tag name="payum.action" alias="payum.action.capture" factory="payrexx"/>
         </service>
-        <!-- <service id="comvation.sylius_payrexx_checkout_plugin.action.status"
-                 class="Comvation\SyliusPayrexxCheckoutPlugin\Action\StatusAction">
-            <tag name="payum.action" factory="payrexx" alias="payum.action.status"/>
-        </service> -->
 
     </services>
 </container>

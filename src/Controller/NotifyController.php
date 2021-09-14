@@ -63,12 +63,14 @@ $this->logger->info(__METHOD__, ['order ID from payment' => $payment->getOrder()
 $this->logger->info(__METHOD__, ['order' => $order::class]);
         $amount = (int) $transaction['amount'];
         if ($amount !== $order->getTotal()) {
-            throw new InvalidArgumentException('Mismatch');
+            throw new InvalidArgumentException('Amount mismatch');
         }
         PaymentStateHelper::updateStates($payment, $status, $this->logger);
+
         // Must flush here, as the updated $payment doesn't pass thru Payum
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
+
         return new Response('', 100);
     }
 }

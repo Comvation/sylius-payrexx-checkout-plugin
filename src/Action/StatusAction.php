@@ -3,20 +3,29 @@
 namespace Comvation\SyliusPayrexxCheckoutPlugin\Action;
 
 use Payum\Core\Action\ActionInterface;
+use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetStatusInterface;
 use Sylius\Component\Core\Model\PaymentInterface as SyliusPaymentInterface;
 
 final class StatusAction implements ActionInterface
 {
     /**
-     * Dummy StatusAction handler
-     *
-     * Status updates are handled exclusively by the NotificationController.
-     * This one must be present, and is called several times by Payum, however.
-     * @param GetStatusInterface
+     * @param GetStatusInterface $request
      */
     public function execute($request): void
     {
+        RequestNotSupportedException::assertSupports($this, $request);
+
+        /** @var SyliusPaymentInterface $payment */
+        $payment = $request->getFirstModel();
+        $details = $payment->getDetails();
+
+        if (200 === $details['httpStatus']) {
+            $request->markCaptured();
+            return;
+        }
+
+        $request->markFailed();
     }
 
     public function supports($request): bool

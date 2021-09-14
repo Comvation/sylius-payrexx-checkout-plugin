@@ -26,31 +26,34 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
 
     private ClientInterface $client;
 
-// TODO: Remove Logger when done debugging
     private LoggerInterface $logger;
 
     public function __construct(
         ClientInterface $client,
         LoggerInterface $logger
-    ) {
+    )
+    {
         $this->client = $client;
         $this->logger = $logger;
     }
 
     public function execute($request): void
     {
-        $this->logger->info(__METHOD__, ['request' => var_export($request, true)]);
-        /** @var PaymentInterface */ // Comvation\SyliusPayrexxCheckoutPlugin\Entity\Payment\Payment
+        /** @var PaymentInterface $payment */
         $payment = $request->getModel();
+
         if (!$payment) {
             throw new LogicException('Missing Payment');
         }
-        $paymentState = $payment->getState(); // Initialize
+
         $this->logger->info(__METHOD__, ['payment' => var_export($payment, true)]);
         $this->logger->info(__METHOD__, ['first payment' => var_export($request->getFirstModel(), true)]);
+
         /** @var array */
         $details = $payment->getDetails();
+
         $this->logger->info(__METHOD__, ['details' => $details]);
+
         if (
             $payment->getState() !== PaymentInterface::STATE_NEW
             // Allow retrying a payment while it's still pending
@@ -59,15 +62,19 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
             // MUST NOT return to Payrexx in any other case
             return;
         }
+
         if (empty($details['gatewayStatus'])) {
             $details = $this->createGateway($request);
             $payment->setDetails($details);
         }
+
         $link = $details['link'] ?? null;
         if (!$link) {
             throw new LogicException('Missing link');
         }
+
         $this->logger->info(__METHOD__, ['link' => $link]);
+
         throw new HttpRedirect($link);
     }
 
@@ -77,13 +84,14 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
      * Returns Gateway data on success, or information on the error.
      * @return array
      */
-    private function createGateway($request) {
-        $this->logger->info(__METHOD__, ['token' => $request->getToken()]);
-        $this->logger->info(__METHOD__, ['target url' => $request->getToken()->getTargetUrl()]);
+    private function createGateway($request)
+    {
         $token = $request->getToken();
         $targetUrl = $token->getTargetUrl();
-        /** @var PaymentInterface $payment */ // Comvation\SyliusPayrexxCheckoutPlugin\Entity\Payment\Payment
+
+        /** @var PaymentInterface $payment */
         $payment = $request->getModel();
+
         $params = GatewayHelper::getParameters($payment);
         $params += [
             // Charge on authorization operation requires parameter
@@ -115,7 +123,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
                     ),
                 ]
             );
-            $body = json_decode((string) $response->getBody());
+            $body = json_decode((string)$response->getBody());
             $gateway = (new PayrexxGateway())->fromArray(current($body->data));
             $this->logger->info(__METHOD__, ['gateway' => $gateway]);
             $details = [
@@ -151,8 +159,6 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
 
     public function supports($request): bool
     {
-        if ($request->getModel()) {
-        }
         return $request instanceof Capture
             && $request->getModel() instanceof PaymentInterface;
     }
