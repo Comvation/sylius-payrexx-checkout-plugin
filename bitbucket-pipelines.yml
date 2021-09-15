@@ -1,0 +1,26 @@
+image: atlassian/default-image:2
+
+definitions:
+  php-image: &phpimage
+    image: php:8.0-cli
+  steps:
+    - step: &install-dependencies
+        name: Composer install
+        <<: *phpimage
+        caches:
+          - composer
+        script:
+          - /bin/bash build/install-composer.sh
+          - composer install
+    - step: &run-unit-tests
+        name: Run unit tests
+        script:
+          - vendor/bin/phpspec run
+
+pipelines:
+  branches:
+    main:
+      - step:
+          <<: *install-dependencies
+      - step:
+          <<: *run-unit-tests
