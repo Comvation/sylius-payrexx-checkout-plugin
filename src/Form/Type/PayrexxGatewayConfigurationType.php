@@ -21,8 +21,7 @@ final class PayrexxGatewayConfigurationType extends AbstractType
      */
     public function buildForm(
         FormBuilderInterface $builder, array $options
-    ): void
-    {
+    ): void {
         $builder->add('instance', TextType::class);
         $builder->add('domain', TextType::class);
         $builder->add('api_key', TextType::class);

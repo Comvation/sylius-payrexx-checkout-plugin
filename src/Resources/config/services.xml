@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <imports>
-        <import resource="services/**/*.xml"/>
-    </imports>
-    <services>
-        <defaults public="true"/>
-
-        <service id="comvation.sylius_payrexx_checkout_plugin.payrexx_gateway_factory"
-                 class="Comvation\SyliusPayrexxCheckoutPlugin\PayrexxGatewayFactory">
-        </service>
-
-        <service id="comvation.sylius_payrexx_checkout_plugin.gateway_factory.payrexx"
-                 class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
-            <argument type="service" id="comvation.sylius_payrexx_checkout_plugin.payrexx_gateway_factory"/>
-            <tag name="payum.gateway_factory_builder" factory="payrexx"/>
-        </service>
-
-    </services>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+  <imports>
+    <import resource="services/**/*.xml"/>
+  </imports>
+  <services>
+    <defaults public="true"/>
+    <service id="comvation.sylius_payrexx_checkout_plugin.payrexx_gateway_factory"
+        class="Comvation\SyliusPayrexxCheckoutPlugin\PayrexxGatewayFactory">
+    </service>
+    <service id="comvation.sylius_payrexx_checkout_plugin.gateway_factory.payrexx"
+        class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
+      <argument type="service"
+          id="comvation.sylius_payrexx_checkout_plugin.payrexx_gateway_factory"/>
+      <tag name="payum.gateway_factory_builder" factory="payrexx"/>
+    </service>
+  </services>
 </container>

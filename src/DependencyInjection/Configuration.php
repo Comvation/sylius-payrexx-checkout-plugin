@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Comvation\SyliusPayrexxCheckoutPlugin\DependencyInjection;
 
@@ -14,9 +12,10 @@ final class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('comvation_sylius_payrexx_checkout__plugin');
+        $treeBuilder = new TreeBuilder(
+            'comvation_sylius_payrexx_checkout__plugin'
+        );
         $rootNode = $treeBuilder->getRootNode();
-
         return $treeBuilder;
     }
 }

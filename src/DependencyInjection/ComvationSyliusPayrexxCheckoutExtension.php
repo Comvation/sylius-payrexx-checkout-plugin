@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Comvation\SyliusPayrexxCheckoutPlugin\DependencyInjection;
 
@@ -17,14 +15,20 @@ final class ComvationSyliusPayrexxCheckoutExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-
+        $config = $this->processConfiguration(
+            $this->getConfiguration([], $container),
+            $configs
+        );
+        $loader = new XmlFileLoader(
+            $container,
+            new FileLocator(__DIR__ . '/../Resources/config')
+        );
         $loader->load('services.xml');
     }
 
-    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
-    {
+    public function getConfiguration(
+        array $config, ContainerBuilder $container
+    ): ConfigurationInterface {
         return new Configuration();
     }
 }

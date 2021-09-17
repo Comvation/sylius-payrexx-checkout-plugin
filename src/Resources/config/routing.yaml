@@ -1,5 +1,0 @@
-payment_payrexx_webhook:
-  path: /payment/payrexx/webhook
-  methods: [ GET, POST ]
-  defaults:
-    _controller: Comvation\SyliusPayrexxCheckoutPlugin\Controller\NotifyController::doAction
