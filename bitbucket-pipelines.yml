@@ -1,0 +1,40 @@
+image: atlassian/default-image:2
+
+definitions:
+  php-image: &phpimage
+    image: php:8.0-cli
+  services:
+    docker:
+      memory: 3072
+  steps:
+    - step: &install-dependencies
+        name: Composer install
+        <<: *phpimage
+        caches:
+          - composer
+        artifacts:
+          - vendor/**
+        script:
+          - /bin/bash build/install-composer.sh
+          - /bin/bash build/install-php-deps.sh
+          - COMPOSER_MEMORY_LIMIT=2G composer install --no-interaction
+    - step: &run-unit-tests
+        name: Run unit tests
+        <<: *phpimage
+        script:
+          - mkdir test-reports
+          - vendor/bin/phpspec run --format=junit --no-interaction > test-reports/junit.xml
+
+pipelines:
+  branches:
+    main:
+      - step:
+          <<: *install-dependencies
+      - step:
+          <<: *run-unit-tests
+  pull-requests:
+    '**':
+      - step:
+          <<: *install-dependencies
+      - step:
+          <<: *run-unit-tests
