@@ -13,7 +13,7 @@ TODO: The following steps are not tested yet and need review/setup.
     $ (cd tests/Application && yarn install)
     $ (cd tests/Application && yarn build)
     $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
-    
+
     $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
     $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
     ```
@@ -66,6 +66,9 @@ Place your order, use any of the Payrexx test credit card numbers; see
 
 ### Running plugin tests
 
+Mind that these are intended to run in
+    vendor/comvation/sylius-payrexx-checkout-plugin
+
 - PHPSpec
 
   ```bash
@@ -112,7 +115,7 @@ Place your order, use any of the Payrexx test credit card numbers; see
     - PHPStan
 
       ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
+      vendor/bin/phpstan analyse -c phpstan.neon -l max src/
       ```
 
 - Coding Standard
