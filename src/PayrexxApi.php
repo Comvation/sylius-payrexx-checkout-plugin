@@ -29,7 +29,7 @@ final class PayrexxApi
     /** @var array */
     private $options = [
         'instance' => '',
-        'apiKey' => '',
+        'api_key' => '',
         'domain' => '',
     ];
 
@@ -54,17 +54,17 @@ final class PayrexxApi
 
     public function getInstance(): string
     {
-        return $this->instance;
+        return $this->options['instance'];
     }
 
     public function getApiKey(): string
     {
-        return $this->apiKey;
+        return $this->options['api_key'];
     }
 
     public function getDomain(): string
     {
-        return $this->domain;
+        return $this->options['domain'];
     }
 
     /**
