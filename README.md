@@ -3,6 +3,12 @@
 The Sylius Payrexx Checkout plugin gives you an integration of the "Payrexx payment platform" (https://www.payrexx.com/)
 into Sylius by using Payrexx's Gateway mechanism.
 
+## Install dependencies
+
+Install needed dependencies first:
+
+    composer install
+
 ## Quickstart Installation
 
 TODO: The following steps are not tested yet and need review/setup.
@@ -23,40 +29,15 @@ and `tests/Application/.env.test`.
 
 ## Local Setup for Development and Testing Payrexx integration
 
-Set up localtunnel according to: https://localtunnel.me/
-
-Note:  Currently redirects to https://theboroer.github.io/localtunnel-www/
-
-Run localtunnel locally
-
-    lt -p 80 -s mflyshop
-
-Use an alternative server, if the default loca.lt is down
-
-    lt -h "http://serverless.social" -p 80 -s mflyshop
-
-Copy the obtained domain name, e.g.
-
-    your url is: https://mflyshop.loca.lt
-    your url is: https://mflyshop.serverless.social
-
-Configure the Payrexx account's webhook URL, e.g.
-
-     https://mflyshop.loca.lt/payment/payrexx/webhook
-     https://mflyshop.serverless.social/payment/payrexx/webhook
-
 Make sure the Payrexx account is set up for test mode!
 
-If not present already, create a "Payrexx Payment" method
+If not present already, create a "Payrexx Payment" method in Sylius:
 
     http://localhost/admin/payment-methods/
 
 Configure the proper instance, key, and API domain (e.g., payrexx.com).
 
-Open the shop in your browser using the domain name, e.g.
-
-     https://mflyshop.loca.lt/
-     https://mflyshop.serverless.social/
+Open the local shop app in your browser.
 
 Place your order, use any of the Payrexx test credit card numbers; see
 
@@ -67,7 +48,10 @@ Place your order, use any of the Payrexx test credit card numbers; see
 ### Running plugin tests
 
 Mind that these are intended to run in
+
     vendor/comvation/sylius-payrexx-checkout-plugin
+
+if you are working in a project which includes this plugin.
 
 - PHPSpec
 

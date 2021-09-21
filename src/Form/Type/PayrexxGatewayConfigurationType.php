@@ -17,11 +17,11 @@ final class PayrexxGatewayConfigurationType extends AbstractType
      * Configuration form
      *
      * Includes a key, and additional instance name and domain.
-     * @author Reto Kohli <reto.kohli@comvation.com>
      */
     public function buildForm(
         FormBuilderInterface $builder, array $options
-    ): void {
+    ): void
+    {
         $builder->add('instance', TextType::class);
         $builder->add('domain', TextType::class);
         $builder->add('api_key', TextType::class);

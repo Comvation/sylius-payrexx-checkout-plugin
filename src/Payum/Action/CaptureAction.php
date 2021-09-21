@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Comvation\SyliusPayrexxCheckoutPlugin\Action;
+namespace Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action;
 
-use Comvation\SyliusPayrexxCheckoutPlugin\PayrexxApi;
+use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxApi;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\ApiAwareTrait;
@@ -28,7 +28,7 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
      */
     public function execute($request): void
     {
-        /** @var PaymentInterface */ // TODO: Whatis
+        /** @var PaymentInterface $payment */
         $payment = $request->getModel();
         $details = $payment->getDetails();
         if ($details['gatewayId'] ?? null) {

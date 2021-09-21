@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Comvation\SyliusPayrexxCheckoutPlugin\Action;
+namespace spec\Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action;
 
-use Comvation\SyliusPayrexxCheckoutPlugin\Action\CaptureAction;
+use Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action\CaptureAction;
 use GuzzleHttp\ClientInterface;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
