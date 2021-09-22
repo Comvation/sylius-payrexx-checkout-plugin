@@ -1,6 +1,6 @@
 <?php
 
-namespace Comvation\SyliusPayrexxCheckoutPlugin\Controller;
+namespace Comvation\SyliusPayrexxCheckoutPlugin\Api;
 
 use Payrexx\Models\Response\Transaction;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -8,7 +8,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 /**
  * Payrexx Payment to Payum status mapper
  */
-class PaymentStateController
+class PayrexxPayumPaymentStatusMapper
 {
     /**
      * Payrexx Payment status state-event machine

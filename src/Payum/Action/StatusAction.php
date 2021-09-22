@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Comvation\SyliusPayrexxCheckoutPlugin\Action;
+namespace Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action;
 
-use Comvation\SyliusPayrexxCheckoutPlugin\Controller\PaymentStateController;
-use Comvation\SyliusPayrexxCheckoutPlugin\PayrexxApi;
+use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxApi;
+use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxPayumPaymentStatusMapper;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\ApiAwareTrait;
@@ -31,11 +31,10 @@ final class StatusAction
     {
         /** @var PaymentInterface $payment */
         $payment = $request->getFirstModel();
-        $paymentStatusCurrent = $payment->getState();
         $details = $request->getModel();
         $details = ArrayObject::ensureArrayObject($details);
         $paymentStatus = $this->api->requestPaymentStatus($request);
-        $paymentStatus = PaymentStateController::transitionPaymentState(
+        $paymentStatus = PayrexxPayumPaymentStatusMapper::transitionPaymentState(
             $payment, $paymentStatus
         );
         // The next three states are final

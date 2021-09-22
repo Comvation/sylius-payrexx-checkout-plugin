@@ -5,7 +5,7 @@
   <services>
     <defaults public="true"/>
     <service id="comvation.sylius_payrexx_checkout_plugin.action.capture"
-        class="Comvation\SyliusPayrexxCheckoutPlugin\Action\CaptureAction">
+        class="Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action\CaptureAction">
       <tag name="payum.action" alias="payum.action.capture" factory="payrexx" />
     </service>
   </services>

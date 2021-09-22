@@ -3,7 +3,7 @@
 namespace spec\Comvation\SyliusPayrexxCheckoutPlugin;
 
 use Http\Message\MessageFactory;
-use Comvation\SyliusPayrexxCheckoutPlugin\PayrexxApi;
+use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxApi;
 use Payum\Core\HttpClientInterface;
 use PhpSpec\ObjectBehavior;
 

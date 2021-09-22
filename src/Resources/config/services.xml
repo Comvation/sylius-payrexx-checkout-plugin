@@ -8,7 +8,7 @@
   <services>
     <defaults public="true"/>
     <service id="comvation.sylius_payrexx_checkout_plugin.payrexx_gateway_factory"
-        class="Comvation\SyliusPayrexxCheckoutPlugin\PayrexxGatewayFactory">
+        class="Comvation\SyliusPayrexxCheckoutPlugin\Payum\Gateway\PayrexxGatewayFactory">
     </service>
     <service id="comvation.sylius_payrexx_checkout_plugin.gateway_factory.payrexx"
         class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
