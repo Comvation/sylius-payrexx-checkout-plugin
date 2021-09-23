@@ -6,7 +6,7 @@ use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxApi;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\ApiAwareTrait;
-use Payum\Core\Exception\LogicException;
+use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Reply\HttpRedirect;
@@ -28,18 +28,23 @@ final class CaptureAction implements ActionInterface, ApiAwareInterface, Gateway
      */
     public function execute($request): void
     {
-        /** @var PaymentInterface $payment */
+        /** @var PaymentInterface */
         $payment = $request->getModel();
+        /** @var array */
         $details = $payment->getDetails();
         if ($details['gatewayId'] ?? null) {
             return;
         }
-        /** @var array */
         $details = $this->api->createGateway($request);
+        if (empty($details['gatewayId'])) {
+            throw new RequestNotSupportedException(
+                'Failed to create Payrexx Gateway'
+            );
+        }
         $payment->setDetails($details);
         $link = $details['link'] ?? null;
         if (!$link) {
-            throw new LogicException('Missing link');
+            throw new RequestNotSupportedException('Missing link');
         }
         throw new HttpRedirect($link); // Payum flushes first
     }

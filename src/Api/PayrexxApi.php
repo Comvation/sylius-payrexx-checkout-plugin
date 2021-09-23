@@ -270,17 +270,12 @@ final class PayrexxApi
 
     /**
      * Request and return the current payment status from the Payrexx Gateway
-     * @return string Payrexx payment status
+     * @return string
      */
     public function requestPaymentStatus(
-        GetStatusInterface $request
-    ): string
-    {
-        /** @var ArrayObject $details */
-        $details = $request->getModel();
-        $dataGateway = $this->doRequest(
-            'GET', 'Gateway', $details['gatewayId'], []
-        );
+        int $gatewayId
+    ): string {
+        $dataGateway = $this->doRequest('GET', 'Gateway', $gatewayId);
         return $dataGateway->status;
     }
 }

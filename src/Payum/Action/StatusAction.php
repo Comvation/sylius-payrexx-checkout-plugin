@@ -7,7 +7,7 @@ use Comvation\SyliusPayrexxCheckoutPlugin\Api\PayrexxPayumPaymentStatusMapper;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\ApiAwareTrait;
-use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetStatusInterface;
@@ -29,61 +29,66 @@ final class StatusAction
      */
     public function execute($request): void
     {
-        /** @var PaymentInterface $payment */
+        /** @var PaymentInterface */
         $payment = $request->getFirstModel();
+        /** @var array */
         $details = $request->getModel();
-        $details = ArrayObject::ensureArrayObject($details);
-        $paymentStatus = $this->api->requestPaymentStatus($request);
-        $paymentStatus = PayrexxPayumPaymentStatusMapper::transitionPaymentState(
-            $payment, $paymentStatus
-        );
+        if (empty($details['gatewayId'])) {
+            throw new RequestNotSupportedException('Missing Gateway');
+        }
+        $paymentState =
+            PayrexxPayumPaymentStatusMapper::transitionPaymentState(
+                $payment,
+                $this->api->requestPaymentStatus($details['gatewayId'])
+            );
         // The next three states are final
-        if ($paymentStatus === PaymentInterface::STATE_COMPLETED) {
+        if ($paymentState === PaymentInterface::STATE_COMPLETED) {
             $request->markCaptured();
             return;
         }
-        if ($paymentStatus === PaymentInterface::STATE_CANCELLED) {
+        if ($paymentState === PaymentInterface::STATE_CANCELLED) {
             $request->markCanceled();
             return;
         }
-        if ($paymentStatus === PaymentInterface::STATE_FAILED) {
+        if ($paymentState === PaymentInterface::STATE_FAILED) {
             $request->markFailed();
+            return;
+        }
+        // If the payment is interrupted at Payrexx (e.g., by the customer
+        // clicking the close icon), its status remains "waiting".
+        // The current payment needs to be cancelled in order to
+        // be able to restart with a new one.
+        if ($paymentState === PaymentInterface::STATE_PROCESSING) {
+            @trigger_error(__METHOD__
+                . ' INFO: Payment has been aborted, cancelling');
+            $request->markCanceled();
             return;
         }
         // Cases that shouldn't occur (and haven't during testing)
-        if (empty($details['gatewayId'])) {
-            @trigger_error(__METHOD__
-                . ' WARNING: No gateway, marking as new');
-            $request->markNew();
-            return;
-        }
         if (empty($details['link'])) {
             @trigger_error(__METHOD__
-                . ' WARNING: Got a gateway without link, marking as failed');
+                . ' WARNING: Got a Gateway without link, marking as failed');
             $request->markFailed();
             return;
         }
-        if ($paymentStatus === PaymentInterface::STATE_NEW) {
+        if ($paymentState === PaymentInterface::STATE_NEW) {
             @trigger_error(__METHOD__
                 . ' WARNING: Payment status is still "new", trying to go on');
             return;
         }
-        if ($paymentStatus === PaymentInterface::STATE_PROCESSING) {
-            @trigger_error(__METHOD__
-                . ' WARNING: Payment status is still "processing", marking as pending');
-            $request->markPending();
-            return;
-        }
-        if ($paymentStatus === PaymentInterface::STATE_AUTHORIZED) {
+        if ($paymentState === PaymentInterface::STATE_AUTHORIZED) {
             // Presuming that it's still possible for the payment to fail
             // or to be cancelled by the customer,
             // this must not be accepted as complete.
             @trigger_error(__METHOD__
-                . ' WARNING: Payment status is still "authorized", marking as authorized');
+                . ' WARNING: Payment status is still "authorized",'
+                . ' marking as authorized');
             $request->markAuthorized();
             return;
         }
-        throw new \Exception('Unhandled case: paymentStatus ' . $paymentStatus);
+        throw new RequestNotSupportedException(
+            'Unhandled payment state ' . $paymentState
+        );
     }
 
     /**
