@@ -17,9 +17,6 @@ final class PayrexxApi
 {
     const API_BASE_URL_FORMAT = 'https://api.%1$s/%2$s/%3$s/%4$d?%5$s';
 
-    private string $instance;
-    private string $apiKey;
-    private string $domain;
     private ArrayObject $options;
 
     /**
@@ -29,8 +26,7 @@ final class PayrexxApi
         ArrayObject $options,
         HttpClientInterface $client,
         MessageFactory $messageFactory
-    )
-    {
+    ) {
         $options = ArrayObject::ensureArrayObject($options);
         $options->validateNotEmpty([
             'instance',
@@ -211,8 +207,7 @@ final class PayrexxApi
         string $model,
         int $id = 0,
         array $parameters = []
-    )
-    {
+    ) {
         $parametersSigned = $this->sign($parameters);
         $apiUrl = $this->getUrl($model, $id);
         $request = $this->messageFactory->createRequest(
