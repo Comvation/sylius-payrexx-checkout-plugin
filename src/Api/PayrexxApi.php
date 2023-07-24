@@ -16,25 +16,19 @@ final class PayrexxApi
 {
     const API_BASE_URL_FORMAT = 'https://api.%1$s/%2$s/%3$s/%4$d?%5$s';
 
-    private ArrayObject $options;
-
     /**
      * @throws \Payum\Core\Exception\InvalidArgumentException on invalid option
      */
     public function __construct(
-        ArrayObject $options,
-        HttpClientInterface $client,
-        MessageFactory $messageFactory
+        private ArrayObject $options,
+        private HttpClientInterface $client,
+        private MessageFactory $messageFactory
     ) {
-        $options = ArrayObject::ensureArrayObject($options);
-        $options->validateNotEmpty([
+        $this->options->validateNotEmpty([
             'instance',
             'api_key',
             'domain',
         ]);
-        $this->options = $options;
-        $this->client = $client;
-        $this->messageFactory = $messageFactory;
     }
 
     public function getInstance(): string
