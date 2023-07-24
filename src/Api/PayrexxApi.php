@@ -88,7 +88,10 @@ final class PayrexxApi
         } catch (\Exception $exception) {
             $details['message'] =
                 $exception->getMessage()
-                . ': ' . $exception->getPrevious()->getMessage();
+                . ($exception->getPrevious()
+                    ? ': ' . $exception->getPrevious()->getMessage()
+                    : ''
+                );
         }
         return $details;
     }
