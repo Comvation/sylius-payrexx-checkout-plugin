@@ -62,10 +62,6 @@ final class PayrexxApi
         $payment = $request->getModel();
         $params = static::getParameters($payment);
         $params += [
-            // Charge on authorization operation requires parameter
-            // "preAuthorization" to be true
-            'chargeOnAuthorization' => 1,
-            'preAuthorization' => 1,
             'successRedirectUrl' => $targetUrl,
             'failedRedirectUrl' => $targetUrl,
             'cancelRedirectUrl' => $targetUrl,
