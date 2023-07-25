@@ -19,9 +19,7 @@ final class PayrexxGatewayFactory extends GatewayFactory
             'payum.factory_title' => 'Payrexx Payment',
             'payum.action.status' => new StatusAction(),
         ]);
-
         $config['payum.required_options'] = ['instance', 'api_key', 'domain'];
-
         $config['payum.api'] = function (ArrayObject $config) {
             $config->validateNotEmpty($config['payum.required_options']);
             $apiConfig = ArrayObject::ensureArrayObject([

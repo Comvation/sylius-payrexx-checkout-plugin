@@ -15,8 +15,8 @@ class PayrexxPayumPaymentStatusMapper
      *
      * Structure:
      *  [ state in => [ event => state out, ...], ...]
-     * state in and out are Payment states.
-     * Events are Payrexx status.
+     * State in and out are Payment states.
+     * Events are Payrexx Transaction status.
      * Missing keys and unset values both indicate invalid transitions.
      */
     const semPaymentState = [
