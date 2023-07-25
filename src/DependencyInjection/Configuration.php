@@ -15,7 +15,6 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder(
             'comvation_sylius_payrexx_checkout__plugin'
         );
-        $rootNode = $treeBuilder->getRootNode();
         return $treeBuilder;
     }
 }
