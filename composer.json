@@ -8,7 +8,7 @@
     ],
     "license": "AGPL",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "sylius/sylius": "^1.11",
         "payrexx/payrexx": "^1.7"
     },
