@@ -2,7 +2,7 @@ image: atlassian/default-image:2
 
 definitions:
   php-image: &phpimage
-    image: php:8.1-cli
+    image: php:8.2-cli
   services:
     docker:
       memory: 3072
