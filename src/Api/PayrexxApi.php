@@ -22,7 +22,7 @@ final class PayrexxApi
     public function __construct(
         private ArrayObject $options,
         private HttpClientInterface $client,
-        private MessageFactory $messageFactory
+        private MessageFactory $messageFactory,
     ) {
         $this->options->validateNotEmpty([
             'instance',
@@ -68,7 +68,10 @@ final class PayrexxApi
         ];
         try {
             $dataGateway = $this->doRequest(
-                'POST', 'Gateway', 0, $params
+                'POST',
+                'Gateway',
+                0,
+                $params
             );
             $details = [
                 'gatewayId' => $dataGateway->id,
@@ -102,14 +105,21 @@ final class PayrexxApi
 
     /**
      * Return the required data from the Order
+     *
+     * Rounds the total "amount" to five cents iff the currency is CHF.
      * @return array
      */
     public static function getParametersOrder(OrderInterface $order)
     {
+        $currency = $order->getCurrencyCode();
+        $amount = $order->getTotal(); // This is in cents already
+        if ($currency === 'CHF') {
+            $amount = static::roundToFiveCents($amount);
+        }
         return [
             'referenceId' => $order->getId(),
-            'amount' => $order->getTotal(), // This is in cents already
-            'currency' => $order->getCurrencyCode(), //'CHF',
+            'amount' => $amount,
+            'currency' => $order->getCurrencyCode(),
             // NTH: Add purpose (only if it can be easily localized):
             //'purpose' => 'Your order # on the YMD@HMS',
         ];
@@ -209,7 +219,8 @@ final class PayrexxApi
             http_build_query($parametersSigned, '', '&', PHP_QUERY_RFC3986),
         );
         $response = $this->client->send($request);
-        if ($response->getStatusCode() < 200
+        if (
+            $response->getStatusCode() < 200
             || $response->getStatusCode() > 300
         ) {
             throw HttpException::factory($request, $response);
@@ -251,7 +262,8 @@ final class PayrexxApi
      */
     private function getUrl(string $model, int $id = 0)
     {
-        return sprintf(static::API_BASE_URL_FORMAT,
+        return sprintf(
+            static::API_BASE_URL_FORMAT,
             $this->options['domain'],
             'v1',
             $model,
@@ -269,5 +281,14 @@ final class PayrexxApi
     ): string {
         $dataGateway = $this->doRequest('GET', 'Gateway', $gatewayId);
         return $dataGateway->status;
+    }
+
+    private function roundToFiveCents(
+        int $amount,
+        int $roundto = 5,
+        int $precision = 0
+    ): int {
+        $amountRounded = round($amount / $roundto, $precision) * $roundto;
+        return intval($amountRounded);
     }
 }
