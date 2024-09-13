@@ -15,11 +15,6 @@ definitions:
         artifacts:
           - vendor/**
         script:
-          # Installing first the libraries necessary to configure and install memcached
-          # - apt-get update && apt-get install -y php-intl
-          # Now we can configure and install the extension
-          # - pecl install ext-intl
-          - docker-php-ext-enable ext-intl
           - /bin/bash build/install-composer.sh
           - /bin/bash build/install-php-deps.sh
           - COMPOSER_MEMORY_LIMIT=2G composer install --no-interaction
