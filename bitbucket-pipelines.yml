@@ -16,7 +16,7 @@ definitions:
           - vendor/**
         script:
           # Installing first the libraries necessary to configure and install memcached
-          - apt-get update && apt-get install -y install php-intl
+          # - apt-get update && apt-get install -y php-intl
           # Now we can configure and install the extension
           - pecl install ext-intl
           - docker-php-ext-enable ext-intl
