@@ -283,7 +283,7 @@ final class PayrexxApi
         return $dataGateway->status;
     }
 
-    private function roundToFiveCents(
+    private static function roundToFiveCents(
         int $amount,
         int $roundto = 5,
         int $precision = 0
