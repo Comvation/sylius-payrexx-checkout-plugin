@@ -19,22 +19,22 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class NotifyController extends AbstractController
 {
     public function __construct(
+        private HttpClientInterface $client,
         private LoggerInterface $logger,
         private PaymentRepositoryInterface $paymentRepository,
-        private HttpClientInterface $client,
         private Payum $payum,
     ) {}
 
     private function handleException(\Exception $e)
     {
         $error = sprintf(
-            'Exception class %1$s code %2$s: message %3$s',
+            '%1$s: %3$s',
             get_class($e),
             $e->getCode(),
             $e->getMessage(),
         );
         $this->logger->error($error);
-        die($error . PHP_EOL);
+        return new Response('Invalid Request', 500);
     }
 
     public function __invoke(
@@ -42,12 +42,13 @@ class NotifyController extends AbstractController
     ): Response {
         try {
             return $this->handle($request);
-        } catch (InvalidArgumentException $e) {
-            $this->handleException($e);
-        } catch (HttpException $e) {
-            $this->handleException($e);
-        } catch (LogicException $e) {
-            $this->handleException($e);
+        } catch (
+            InvalidArgumentException
+            | HttpException
+            | LogicException
+            $e
+        ) {
+            return $this->handleException($e);
         }
     }
 
@@ -57,7 +58,6 @@ class NotifyController extends AbstractController
         if (!$transaction) {
             throw new LogicException('Missing transaction');
         }
-        $this->logger->warning(__METHOD__, ['transaction' => $transaction]);
         return $transaction;
     }
 
@@ -78,7 +78,6 @@ class NotifyController extends AbstractController
         if (!$referenceId) {
             throw new LogicException('Missing reference ID');
         }
-        $this->logger->warning(__METHOD__, ['$referenceId' => $referenceId]);
         return $referenceId;
     }
 
@@ -103,20 +102,16 @@ class NotifyController extends AbstractController
         if (!$payment) {
             throw new LogicException('Missing Payment');
         }
-        $this->logger->warning(__METHOD__, ['payment class' => $payment::class]);
-        $this->logger->warning(__METHOD__, ['payment ID' => $payment->getId()]);
         return $payment;
     }
 
     private function getPayumHash(PaymentInterface $payment): string
     {
         $paymentDetails = $payment->getDetails();
-        $this->logger->warning(__METHOD__, ['$paymentDetails' => $paymentDetails]);
         $payumHash = $paymentDetails['payum_hash'] ?? null;
         if (!$payumHash) {
             throw new LogicException('Missing payum hash');
         }
-        $this->logger->warning(__METHOD__, ['$payumHash' => $payumHash]);
         return $payumHash;
     }
 
@@ -129,17 +124,13 @@ class NotifyController extends AbstractController
 
     private function handle(Request $request): Response
     {
-        $this->logger->warning(__METHOD__, ['request class' => $request::class]);
         $param = $request->request->all();
-        $this->logger->warning(__METHOD__, ['param' => $param]);
         $orderId = $this->getTransactionInvoiceReferenceIdParam($param);
         $payment = $this->getLatestPaymentByOrderId($orderId);
         $payumHash = $this->getPayumHash($payment);
         $token = $this->getPayumToken($payumHash);
         $gateway = $this->payum->getGateway($token->getGatewayName());
         $gateway->execute(new Notify($token));
-
-        // Respond as Payrexx expects
-        return new Response('', 100);
+        return new Response('', 200);
     }
 }

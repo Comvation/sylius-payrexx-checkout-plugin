@@ -38,8 +38,6 @@ final class StatusAction
         if (empty($details['gatewayId'])) {
             throw new RequestNotSupportedException('Missing Gateway');
         }
-        echo __METHOD__. PHP_EOL;
-        echo ('request gateway id '.$details['gatewayId']) . PHP_EOL;
         $payrexxPaymentState = $this->api
             ->requestPaymentStatus($details['gatewayId']);
         $paymentState =
@@ -47,8 +45,6 @@ final class StatusAction
                 $payment,
                 $payrexxPaymentState,
             );
-// TEST: $paymentState = PaymentInterface::STATE_COMPLETED;
-        echo ('payrexx payment state '.$payrexxPaymentState.' -> payum '.$paymentState) . PHP_EOL;
         // The next three states are final
         if ($paymentState === PaymentInterface::STATE_COMPLETED) {
             $request->markCaptured();

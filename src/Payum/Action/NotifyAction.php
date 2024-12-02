@@ -42,13 +42,9 @@ implements ActionInterface, ApiAwareInterface, GatewayAwareInterface
      */
     public function supports($request): bool
     {
-        echo __METHOD__ . PHP_EOL;
         $isNotify = $request instanceof Notify;
         $token = $request->getToken();
         $model = $request->getModel();
-        echo 'request class ' . ($request ? get_class($request) : 'n/a') . PHP_EOL;
-        echo ($token ? get_class($token) : 'n/a') . PHP_EOL;
-        echo ($model ? get_class($model) : 'n/a') . PHP_EOL;
         return true
             && $isNotify
             && $model instanceof PaymentInterface

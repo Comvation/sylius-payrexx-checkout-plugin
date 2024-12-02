@@ -3,9 +3,9 @@ services:
   comvation_sylius_payrexx_checkout.notifycontroller:
     class: Comvation\SyliusPayrexxCheckoutPlugin\Controller\NotifyController
     arguments:
+      - '@http_client'
       - '@monolog.logger'
       - '@sylius.repository.payment'
-      - '@http_client'
       - '@payum'
     calls:
       - [setContainer, ["@service_container"]] # Required
