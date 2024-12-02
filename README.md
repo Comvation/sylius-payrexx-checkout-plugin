@@ -9,12 +9,21 @@ into Sylius by using Payrexx's Gateway mechanism.
 ddev composer install
 ```
 
-## Add the Webhook Route
+## Add the Webhook Route and Controller
 
 ```
 # config/routes/payrexx.yaml
 comvation_sylius_payrexx_checkout_plugin_webhook:
   resource: '@ComvationSyliusPayrexxCheckoutPlugin/config/routes.yaml'
+```
+
+```
+# config/services.yaml
+services:
+  # ...
+  Comvation\SyliusPayrexxCheckoutPlugin\Controller\NotifyController:
+    public: true # Required
+    alias: comvation_sylius_payrexx_checkout.notifycontroller
 ```
 
 ## Local Setup for Development and Testing Payrexx integration
