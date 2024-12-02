@@ -57,6 +57,7 @@ final class PayrexxApi
     public function createGateway($request)
     {
         $token = $request->getToken();
+        $hash = $token->getHash();
         $targetUrl = $token->getTargetUrl();
         /** @var PaymentInterface $payment */
         $payment = $request->getModel();
@@ -76,6 +77,7 @@ final class PayrexxApi
             $details = [
                 'gatewayId' => $dataGateway->id,
                 'link' => $dataGateway->link,
+                'payum_hash' => $hash,
             ];
         } catch (\Exception $exception) {
             $details['message'] =

@@ -1,0 +1,46 @@
+services:
+  # Notification Controller; webhook endpoint
+  comvation_sylius_payrexx_checkout.notifycontroller:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Controller\NotifyController
+    arguments:
+      - '@monolog.logger'
+      - '@sylius.repository.payment'
+      - '@http_client'
+      - '@payum'
+    calls:
+      - [setContainer, ["@service_container"]] # Required
+  # Payrexx Gateway
+  comvation_sylius_payrexx_checkout.payrexx_gateway_factory:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Payum\Gateway\PayrexxGatewayFactory
+  comvation_sylius_payrexx_checkout.gateway_factory.payrexx:
+    class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+    tags:
+      - { name: payum.gateway_factory_builder, factory: payrexx }
+    arguments:
+      - '@comvation_sylius_payrexx_checkout.payrexx_gateway_factory'
+  # Payum Actions
+  comvation_sylius_payrexx_checkout.action.capture:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action\CaptureAction
+    public: true # Required
+    tags:
+      - { name: payum.action, alias: payum.action.capture, factory: payrexx }
+  comvation_sylius_payrexx_checkout.action.notify:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action\NotifyAction
+    public: true # Required
+    tags:
+      - { name: payum.action, alias: payum.action.notify, factory: payrexx }
+  comvation_sylius_payrexx_checkout.action.status:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Payum\Action\StatusAction
+    public: true # Required
+    tags:
+      - { name: payum.action, alias: payum.action.status, factory: payrexx }
+  # Payrexx Gateway Config Form Extension
+  comvation_sylius_payrexx_checkout.form.type.payrexx_gateway_configuration:
+    class: Comvation\SyliusPayrexxCheckoutPlugin\Form\Type\PayrexxGatewayConfigurationType
+    tags:
+      - {
+          name: sylius.gateway_configuration_type,
+          type: payrexx,
+          label: 'Payrexx Payment',
+        }
+      - { name: form.type }

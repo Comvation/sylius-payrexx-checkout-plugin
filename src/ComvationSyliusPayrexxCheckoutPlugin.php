@@ -2,10 +2,20 @@
 
 namespace Comvation\SyliusPayrexxCheckoutPlugin;
 
-use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+// Symfony 6.1+ style, see
+//  https://symfony.com/blog/new-in-symfony-6-1-simpler-bundle-extension-and-configuration
 
-final class ComvationSyliusPayrexxCheckoutPlugin extends Bundle
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+
+final class ComvationSyliusPayrexxCheckoutPlugin extends AbstractBundle
 {
-    use SyliusPluginTrait;
+    public function loadExtension(
+        array $config,
+        ContainerConfigurator $container,
+        ContainerBuilder $builder
+    ): void {
+        $container->import('../config/services.yaml');
+    }
 }
