@@ -1,0 +1,5 @@
+# See https://github.com/symfony/symfony/discussions/49168
+comvation_sylius_payrexx_checkout_webhook:
+  path: /payment/payrexx/webhook
+  methods: [GET, POST]
+  controller: Comvation\SyliusPayrexxCheckoutPlugin\Controller\NotifyController

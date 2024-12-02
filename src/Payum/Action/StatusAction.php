@@ -11,6 +11,7 @@ use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetStatusInterface;
+use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 final class StatusAction
@@ -26,20 +27,23 @@ final class StatusAction
 
     /**
      * {@inheritDoc}
+     * @param GetStatus $request
      */
     public function execute($request): void
     {
-        /** @var PaymentInterface */
-        $payment = $request->getFirstModel();
+        /** @var PaymentInterface $payment */
+        $payment = $request->getModel();
         /** @var array */
-        $details = $request->getModel();
+        $details = $payment->getDetails();
         if (empty($details['gatewayId'])) {
             throw new RequestNotSupportedException('Missing Gateway');
         }
+        $payrexxPaymentState = $this->api
+            ->requestPaymentStatus($details['gatewayId']);
         $paymentState =
             PayrexxPayumPaymentStatusMapper::transitionPaymentState(
                 $payment,
-                $this->api->requestPaymentStatus($details['gatewayId'])
+                $payrexxPaymentState,
             );
         // The next three states are final
         if ($paymentState === PaymentInterface::STATE_COMPLETED) {
@@ -97,6 +101,6 @@ final class StatusAction
     public function supports($request): bool
     {
         return $request instanceof GetStatusInterface
-            && $request->getModel() instanceof \ArrayAccess;
+            && $request->getModel() instanceof PaymentInterface;
     }
 }

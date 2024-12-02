@@ -1,2 +1,0 @@
-imports:
-  - { resource: "@ComvationSyliusPayrexxCheckoutPlugin/Resources/config/services.xml" }
