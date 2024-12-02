@@ -16,7 +16,6 @@ ddev composer install
 comvation_sylius_payrexx_checkout_plugin_webhook:
   resource: '@ComvationSyliusPayrexxCheckoutPlugin/config/routes.yaml'
 ```
-
 ```
 # config/services.yaml
 services:
@@ -26,21 +25,50 @@ services:
     alias: comvation_sylius_payrexx_checkout.notifycontroller
 ```
 
-## Local Setup for Development and Testing Payrexx integration
+## Configure the Webhook URL at Payrexx
+
+Add or edit a webhook in the Payrexx admin panel:
+
+https://&lt;instance&gt;.payrexx.com/cadmin/index.php?cmd=checkout&act=api
+
+* Choose a sensible name
+* Set the URL to your domain, with the proper path appended:
+  ```
+  https://<my-domain>/payment/payrexx/webhook
+  ```
+* Activate "Transaction" events only
+* Enable "retry on error"
+* Select type "normal (PHP-Post)" and the latest version
+
+## Add a Payment Method
+
+If not present already, create a "Payrexx Payment" method in Sylius:
+```
+https://<my-domain>/admin/payment-methods/
+```
+Configure the proper instance, key, and API domain (e.g., payrexx.com).
+
+## Local Setup for Development and Testing
 
 Make sure the Payrexx account is set up for test mode!
 
-If not present already, create a "Payrexx Payment" method in Sylius:
-
-https://<hostname>.ddev.site/admin/payment-methods/
-
-Configure the proper instance, key, and API domain (e.g., payrexx.com).
-
-Open the local shop app in your browser.
-
-Place your order, use any of the Payrexx test credit card numbers; see
-
-https://support.payrexx.com/de/support/solutions/articles/11000078221
+Add an extra domain for the localtunnel in the ddev config.
+Choose a unique host name:
+```
+# .ddev/config.yaml
+# [...]
+additional_fqdns:
+  - devrkpayrexx.loca.lt # localtunnel for Payrexx
+```
+Open the tunnel:
+```
+lt -p 80 -s devrkpayrexx
+> your url is: https://devrkpayrexx.loca.lt
+```
+The webhook URL set at Payrexx (see above) must of course match your tunnel:
+```
+https://devrkpayrexx.loca.lt/payment/payrexx/webhook
+```
 
 ## Quickstart Installation
 
