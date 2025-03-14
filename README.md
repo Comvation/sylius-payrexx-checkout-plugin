@@ -1,12 +1,17 @@
 # Comvation Sylius Payrexx Checkout Plugin
 
-The Sylius Payrexx Checkout plugin gives you an integration of the "Payrexx payment platform" (https://www.payrexx.com/)
-into Sylius by using Payrexx's Gateway mechanism.
+Integrates the Payrexx payment gateway interface into Sylius.
+
+## Add the Dependency
+
+```bash
+composer require comvation/sylius-payrexx-checkout-plugin:dev-main
+```
 
 ## Install Dependencies
 
 ```bash
-ddev composer install
+composer install
 ```
 
 ## Add the Webhook Route and Controller
@@ -48,31 +53,34 @@ https://<my-domain>/admin/payment-methods/
 ```
 Configure the proper instance, key, and API domain (e.g., payrexx.com).
 
-## Local Setup for Development and Testing
+## Local Setup with DDEV for Development and Testing
 
 Make sure the Payrexx account is set up for test mode!
 
-Add an extra domain for the localtunnel in the ddev config.
+Add an extra domain for the localtunnel in the DDEV config.
 Choose a unique host name:
 ```
 # .ddev/config.yaml
 # [...]
 additional_fqdns:
-  - devrkpayrexx.loca.lt # localtunnel for Payrexx
+  - my-payrexx.loca.lt # localtunnel for Payrexx
 ```
 Open the tunnel:
 ```
-lt -p 80 -s devrkpayrexx
-> your url is: https://devrkpayrexx.loca.lt
+lt -p 80 -s my-payrexx
+> your url is: https://my-payrexx.loca.lt
 ```
 The webhook URL set at Payrexx (see above) must of course match your tunnel:
 ```
-https://devrkpayrexx.loca.lt/payment/payrexx/webhook
+https://my-payrexx.loca.lt/payment/payrexx/webhook
 ```
+
+You don't have to run a DDEV environment; just make sure the webhook requests
+are routed to Sylius.
 
 ## Quickstart Installation
 
-TODO: The following steps are not tested yet and need review/setup.
+Note: The following steps need a review.
 
 From the plugin root directory, run the following commands:
 
