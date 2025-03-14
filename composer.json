@@ -6,7 +6,7 @@
         "sylius",
         "sylius-plugin"
     ],
-    "license": "AGPL",
+    "license": "MIT",
     "require": {
         "php": "^8.2",
         "ext-intl": "*",
