@@ -5,7 +5,7 @@ Integrates the Payrexx payment gateway interface into Sylius.
 ## Add the Dependency
 
 ```bash
-composer require comvation/sylius-payrexx-checkout-plugin:dev-main
+composer require comvation/sylius-payrexx-checkout-plugin
 ```
 
 ## Install Dependencies
@@ -80,13 +80,10 @@ https://my-payrexx.loca.lt/payment/payrexx/webhook
 ## Running Unit Tests
 
 These are intended to run in the plugin folder.
-
 ```bash
 cd vendor/comvation/sylius-payrexx-checkout-plugin
 ```
-
 Run the unit tests with
-
 ```bash
 phpunit
 ```
