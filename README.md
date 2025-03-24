@@ -2,6 +2,8 @@
 
 Integrates the Payrexx payment gateway interface into Sylius.
 
+Supported and tested versions: 1.11...1.14 (inclusive)
+
 ## Add the Dependency
 
 ```bash
